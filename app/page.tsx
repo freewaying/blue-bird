@@ -15,11 +15,12 @@ export default async function Home() {
   }
   const { data } = await supabase
     .from("tweets")
-    .select("*, profiles(*), likes(*)");
+    .select("*, author: profiles(*), likes(user_id)");
   const tweets =
     data?.map((tweet) => {
       return {
         ...tweet,
+        author: Array.isArray(tweet.author) ? tweet.author[0] : tweet.author,
         likes: tweet.likes?.length ?? 0,
         user_has_liked_tweet: tweet.likes.some(
           (like) => like.user_id === session.user.id
@@ -33,7 +34,7 @@ export default async function Home() {
       {tweets?.map((tweet) => (
         <div key={tweet.id}>
           <p>
-            {tweet.profiles?.email} {tweet.profiles?.username}
+            {tweet.author.email} {tweet.author.username}
           </p>
           <p>{tweet.title}</p>
           <p>
