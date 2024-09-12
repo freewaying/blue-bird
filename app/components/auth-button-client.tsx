@@ -24,9 +24,13 @@ export default function AuthButtonClient({ user }: { user: User | null }) {
   return (
     <div>
       {user ? (
-        <button onClick={handleSignOut}>LoginOut</button>
+        <button className="text-xs text-gray-400" onClick={handleSignOut}>
+          Logout
+        </button>
       ) : (
-        <button onClick={handleSignIn}>Login</button>
+        <button className="text-xs text-gray-400" onClick={handleSignIn}>
+          Login
+        </button>
       )}
     </div>
   );
