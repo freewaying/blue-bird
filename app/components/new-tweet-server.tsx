@@ -12,7 +12,6 @@ export default async function handleAddTweetServerAction(formData: FormData) {
   } = await superbase.auth.getUser();
   if (user) {
     await superbase.from("tweets").insert({ title, user_id: user.id });
-    formData.set("title", "");
     revalidatePath("/");
     return true;
   }

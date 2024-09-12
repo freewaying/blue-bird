@@ -9,23 +9,59 @@ export type Json =
 export type Database = {
   public: {
     Tables: {
+      likes: {
+        Row: {
+          created_at: string
+          id: string
+          tweet_id: string | null
+          user_id: string | null
+        }
+        Insert: {
+          created_at?: string
+          id?: string
+          tweet_id?: string | null
+          user_id?: string | null
+        }
+        Update: {
+          created_at?: string
+          id?: string
+          tweet_id?: string | null
+          user_id?: string | null
+        }
+        Relationships: [
+          {
+            foreignKeyName: "likes_tweet_id_fkey"
+            columns: ["tweet_id"]
+            isOneToOne: false
+            referencedRelation: "tweets"
+            referencedColumns: ["id"]
+          },
+          {
+            foreignKeyName: "likes_user_id_fkey"
+            columns: ["user_id"]
+            isOneToOne: false
+            referencedRelation: "profiles"
+            referencedColumns: ["id"]
+          },
+        ]
+      }
       profiles: {
         Row: {
           avatar_url: string
+          email: string | null
           id: string
-          name: string
           username: string
         }
         Insert: {
           avatar_url: string
+          email?: string | null
           id?: string
-          name: string
           username: string
         }
         Update: {
           avatar_url?: string
+          email?: string | null
           id?: string
-          name?: string
           username?: string
         }
         Relationships: [
