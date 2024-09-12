@@ -1,9 +1,34 @@
 "use client";
 
-import { useOptimistic } from "react";
+import { createClientComponentClient } from "@supabase/auth-helpers-nextjs";
+import { useRouter } from "next/navigation";
+import { useEffect, useOptimistic } from "react";
 import Like from "./likes";
 
 export default function Tweets({ tweets }: { tweets: TweetWithAuthor[] }) {
+  // 订阅数据库实时更新通知
+  const supabase = createClientComponentClient();
+  const router = useRouter();
+  useEffect(() => {
+    const channel = supabase
+      .channel("tweets realtime change")
+      .on(
+        "postgres_changes",
+        {
+          event: "*",
+          schema: "public",
+          table: "tweets",
+        },
+        () => {
+          router.refresh();
+        }
+      )
+      .subscribe();
+    return () => {
+      supabase.removeChannel(channel);
+    };
+  }, [supabase, router]);
+
   const [optimisticTweets, addOptimisticTweet] = useOptimistic<
     TweetWithAuthor[],
     TweetWithAuthor
